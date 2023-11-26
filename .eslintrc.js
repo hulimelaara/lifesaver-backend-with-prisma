@@ -20,7 +20,12 @@ module.exports = {
         project: "tsconfig.json"
     },
     parser: "@typescript-eslint/parser",
-    extends: ["plugin:@typescript-eslint/recommended", "prettier"],
+    extends: [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "prettier"
+    ],
     plugins: ["prettier"],
     rules: {
         "prettier/prettier": "error"
