@@ -1,0 +1,29 @@
+# Node.js
+node_modules/
+
+# Build output
+/dist/
+
+# Editor-specific files
+.idea/
+
+# Dependency directories
+.npm/
+
+# Logs and runtime data
+logs/
+*.log
+npm-debug.log*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Environment configuration
+.env
+.env.local
+.env.*.local
+
+# Ignore npm package lock files
+package-lock.json
+yarn.lock
