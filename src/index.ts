@@ -45,7 +45,7 @@ app.use(bodyParser.json({}))
 app.use(cors())
 
 app.get("/", (req: Request, res: Response) => {
-    res.send("Hello, From LifeSaver!!")
+    res.send("Hello, From LifeSaver!")
 })
 
 app.listen(config.port, () => {
