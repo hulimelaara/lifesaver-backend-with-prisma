@@ -3,15 +3,13 @@ import helmet from "helmet"
 import morgan from "morgan"
 import compress from "compression"
 import cors from "cors"
-import dotenv from "dotenv"
+
 import bodyParser from "body-parser"
 
 import routes from "../routes"
 import rateLimitterConfig from "../utils/expressRateLimiter"
 
 export default () => {
-    dotenv.config()
-
     const app = express()
 
     // Use Helmet!
