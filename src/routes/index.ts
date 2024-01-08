@@ -1,9 +1,14 @@
-import express, { Router } from "express"
+import express, { Router, Request, Response } from "express"
 
 import userRoutes from "./user/userRoutes"
 
-const routes: Router = express.Router()
+const router: Router = express.Router()
 
-routes.use("/users", userRoutes)
+router.get("/", (req: Request, res: Response) => {
+    res.send("Hi")
+})
 
-export default routes
+// User Routes
+router.use("/user", userRoutes)
+
+export default router

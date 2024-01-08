@@ -1,13 +1,34 @@
-import expressConfig from "./config/expressConfig"
+import { app, port } from "./configs/server"
+import { prisma } from "./configs/prisma"
+import config from "./configs/environment"
+import { logger } from "./configs/logger"
 
-import { logger } from "./utils/logger"
-import config from "./config/environment"
+const server = app.listen(port, () => {
+    logger.info(`Server is running on ${config.port}`)
+})
 
-const log = logger("server")
+process.on("exit", () => {
+    logger.info("Exiting Server...")
+    prisma.$disconnect()
+})
 
-const app = expressConfig()
+server.on("error", (error) => {
+    logger.error("Express server error:", error.message)
 
-app.listen(config.port, () => {
-    console.log(`Server is running on Port ${config.port}`)
-    log.info(`Server is running on Port ${config.port}`)
+    prisma.$disconnect()
+
+    process.exit(1)
+})
+;["SIGINT", "SIGTERM"].forEach((signal) => {
+    process.on(signal, () => {
+        logger.info(`Received ${signal}. Shutting down gracefully...`)
+
+        server.close(() => {
+            logger.info("Express server closed")
+
+            prisma.$disconnect()
+
+            process.exit(0)
+        })
+    })
 })

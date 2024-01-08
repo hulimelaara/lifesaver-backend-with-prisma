@@ -1,10 +1,10 @@
 import express, { Router } from "express"
 
-import { userController } from "../../controller"
+import { userControllers } from "../../controllers"
 
 const userRoutes: Router = express.Router()
 
-userRoutes.post("/register", userController.userRegister)
-userRoutes.post("/login", userController.userLogin)
+userRoutes.get("/register", userControllers.userRegister)
+userRoutes.post("/login", userControllers.userLogin)
 
 export default userRoutes
