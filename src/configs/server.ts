@@ -6,9 +6,12 @@ import dnsPrefetchControl from "dns-prefetch-control"
 import hpp from "hpp"
 import bodyParser from "body-parser"
 import morgan from "morgan"
+import cookieParser from "cookie-parser"
 
 import config from "./environment"
 import limiter from "./rateLimiterConfig"
+
+import { errorMiddleware } from "../middlewares/errors"
 
 import routes from "../routes"
 
@@ -46,8 +49,14 @@ app.use(hpp())
 // Morgan middleware for logging
 app.use(morgan("combined"))
 
+// Initialize cookie Parser middleware
+app.use(cookieParser())
+
 // Use routes
-app.use("/", routes)
+app.use("/api", routes)
+
+//Adding Error Middleware
+app.use(errorMiddleware)
 
 const port = config.port
 

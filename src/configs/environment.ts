@@ -2,7 +2,7 @@ import dotenv from "dotenv"
 import path from "path"
 import { ZodError, z } from "zod"
 
-import envSchema from "../schemas/envSchema"
+import envSchema from "../schemas/zodSchema/envSchema"
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") })
 
@@ -11,7 +11,11 @@ type Config = z.infer<typeof envSchema>
 const envStore = {
     environment: process.env.NODE_ENV,
     port: process.env.PORT,
-    databaseUrl: process.env.DATABASE_URL
+    databaseUrl: process.env.DATABASE_URL,
+    jwtSecret: process.env.JWT_SECRET,
+    accessTokenExpiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
+    accessTokenCookieExpiresIn: process.env.ACCESS_TOKEN_COOKIE_EXPIRES_IN,
+    refreshTokenExpiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN
 }
 
 const getConfig = (): Config => {

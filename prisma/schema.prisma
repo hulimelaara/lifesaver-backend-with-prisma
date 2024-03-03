@@ -11,23 +11,28 @@ datasource db {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  email      String    @unique
-  userId     String?   @unique
-  firstName  String?
-  lastName   String?
-  birthDay   DateTime?
-  phone      String    @unique
-  bloodGroup String
-  isActive   Boolean
-  isVerified Boolean   @default(false)
-  address    Address[]
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id              String           @id @default(uuid())
+  email           String           @unique
+  userId          String?          @unique
+  firstName       String?
+  lastName        String?
+  birthDay        DateTime?
+  mobile          String           @unique
+  password        String
+  bloodGroup      String
+  isActive        Boolean          @default(true)
+  isVerified      Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  Address         Address[]
+  roleId          Int?
+  role            Role?            @relation(fields: [roleId], references: [id])
+  userPermissions UserPermission[]
 }
 
 model Address {
-  id            Int      @id @default(autoincrement())
+  id            String   @id @default(uuid())
+  userId        String
   pinCode       Int
   addressLine1  String
   addressLine2  String?
@@ -37,7 +42,47 @@ model Address {
   isPrimary     Boolean  @default(false)
   isResidential Boolean  @default(false)
   isPermanent   Boolean  @default(false)
-  user          User     @relation(fields: [id], references: [id])
+  user          User?    @relation(fields: [userId], references: [id])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+model Module {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  permissions Permission[]
+}
+
+model Permission {
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
+  moduleId        Int
+  module          Module           @relation(fields: [moduleId], references: [id])
+  rolePermissions RolePermission[]
+  userPermissions UserPermission[]
+}
+
+model Role {
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
+  users           User[]
+  rolePermissions RolePermission[]
+}
+
+model RolePermission {
+  roleId       Int
+  permissionId Int
+  role         Role       @relation(fields: [roleId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+}
+
+model UserPermission {
+  userId       String
+  permissionId Int
+  user         User       @relation(fields: [userId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([userId, permissionId])
 }
