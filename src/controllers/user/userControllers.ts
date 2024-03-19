@@ -99,30 +99,34 @@ export const getPermissionsByUser = async (req: Request, res: Response) => {
 
 // Remove a permission from a user
 export const removePermissionFromUser = async (req: Request, res: Response) => {
-    const { userId, permissionId } = req.params
+    const { userId } = req.params
+    const { permissions } = req.body
 
-    // Check if the userPermission exists
-    const userPermission = await prisma.userPermission.findUnique({
-        where: {
-            userId_permissionId: {
-                userId: userId,
-                permissionId: parseInt(permissionId)
+    // Remove each permission to the user
+    for (const permissionId of permissions) {
+        // Check if the userPermission exists
+        const userPermission = await prisma.userPermission.findUnique({
+            where: {
+                userId_permissionId: {
+                    userId: userId,
+                    permissionId: parseInt(permissionId)
+                }
             }
-        }
-    })
+        })
 
-    if (!userPermission) {
-        return res.status(404).json({ status: false, message: "UserPermission not found" })
+        if (!userPermission) {
+            return res.status(404).json({ status: false, message: "UserPermission not found" })
+        }
+
+        await prisma.userPermission.delete({
+            where: {
+                userId_permissionId: {
+                    userId: userId,
+                    permissionId: parseInt(permissionId)
+                }
+            }
+        })
     }
-
-    await prisma.userPermission.delete({
-        where: {
-            userId_permissionId: {
-                userId: userId,
-                permissionId: parseInt(permissionId)
-            }
-        }
-    })
 
     res.status(200).json({ status: true, message: "Permission removed from user successfully" })
 }

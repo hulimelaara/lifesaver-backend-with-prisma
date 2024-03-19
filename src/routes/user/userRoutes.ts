@@ -18,7 +18,7 @@ userRoutes.post("/:userId/permissions", withErrorHandler(userControllers.assignP
 userRoutes.get("/:userId/permissions", withErrorHandler(userControllers.getPermissionsByUser))
 //  Remove a permission from a user.
 userRoutes.delete(
-    "/:userId/permissions/:permissionId",
+    "/:userId/permissions",
     withErrorHandler(userControllers.removePermissionFromUser)
 )
 
