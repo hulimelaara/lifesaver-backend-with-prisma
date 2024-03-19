@@ -23,7 +23,7 @@ rolesRoutes.post("/:roleId/permissions", withErrorHandler(rolesController.assign
 rolesRoutes.get("/:roleId/permissions", withErrorHandler(rolesController.getPermissionsByRole))
 // Remove a permission
 rolesRoutes.delete(
-    "/:roleId/permissions/:permissionId",
+    "/:roleId/permissions/",
     withErrorHandler(rolesController.removePermissionFromRole)
 )
 export default rolesRoutes

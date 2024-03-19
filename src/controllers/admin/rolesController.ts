@@ -108,30 +108,33 @@ export const getPermissionsByRole = async (req: Request, res: Response) => {
 
 // Remove a permission from a role
 export const removePermissionFromRole = async (req: Request, res: Response) => {
-    const { roleId, permissionId } = req.params
+    const { roleId } = req.params
+    const { permissions } = req.body
 
-    // Check if the rolePermission exists
-    const rolePermission = await prisma.rolePermission.findUnique({
-        where: {
-            roleId_permissionId: {
-                roleId: parseInt(roleId),
-                permissionId: parseInt(permissionId)
+    // Remove each permission to the user
+    for (const permissionId of permissions) {
+        // Check if the rolePermission exists
+        const rolePermission = await prisma.rolePermission.findUnique({
+            where: {
+                roleId_permissionId: {
+                    roleId: parseInt(roleId),
+                    permissionId: parseInt(permissionId)
+                }
             }
-        }
-    })
+        })
 
-    if (!rolePermission) {
-        return res.status(404).json({ status: false, message: "RolePermission not found" })
+        if (!rolePermission) {
+            return res.status(404).json({ status: false, message: "RolePermission not found" })
+        }
+
+        await prisma.rolePermission.delete({
+            where: {
+                roleId_permissionId: {
+                    roleId: parseInt(roleId),
+                    permissionId: parseInt(permissionId)
+                }
+            }
+        })
     }
-
-    await prisma.rolePermission.delete({
-        where: {
-            roleId_permissionId: {
-                roleId: parseInt(roleId),
-                permissionId: parseInt(permissionId)
-            }
-        }
-    })
-
     res.status(200).json({ status: true, message: "Permission removed from role successfully" })
 }
